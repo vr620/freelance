@@ -88,7 +88,7 @@ def predict():
         avail = str(request.form['Availability'])
         
         my_prediction = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
-        
+        my_prediction = my_prediction/10
         return render_template('result.html', prediction = round(my_prediction , 2))
 
 if __name__ == '__main__':
