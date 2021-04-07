@@ -89,7 +89,7 @@ def predict():
         
         my_prediction = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
         
-        return render_template('result.html', prediction = floor(my_prediction))
+        return render_template('result.html', prediction = round(my_prediction , 2))
 
 if __name__ == '__main__':
 	app.run(debug=True)
