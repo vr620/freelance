@@ -11,9 +11,6 @@ H_model = pickle.load(open(H_filename, 'rb'))
 
 X = pd.read_csv('House_Price_Prediction_Bengluru/_Data.csv' , index_col = 0)
 
-df = pd.read_excel("House_Price_Prediction_Bengluru/Livability Score.xlsx")
-df = df.set_index('location')['Livability Score'].to_dict()
-
 app = Flask(__name__)
 
 def prediction(location, bhk, bath, balcony, sqft, area_type, availability):
@@ -41,8 +38,7 @@ def prediction(location, bhk, bath, balcony, sqft, area_type, availability):
         x[area_index] = 1
     if avail_index >= 0:
         x[avail_index] = 1
-
-    
+        
     return H_model.predict([x])[0]
 
 @app.route('/')
@@ -90,7 +86,9 @@ def predict():
         sqft = int(request.form['Square Fit'])
         a_type = str(request.form['Area Type'])
         avail = str(request.form['Availability'])
-        my_prediction= prediction(loc, bhk, bath, balc, sqft, a_type, avail)
+        
+        my_prediction = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
+        
         return render_template('result.html', prediction = round(my_prediction , 2))
 
 if __name__ == '__main__':
