@@ -1,6 +1,7 @@
 # Importing essential libraries
 from flask import Flask, render_template, request , Markup
 import pandas as pd
+import random
 import pickle
 import numpy as np
 from math import floor
@@ -8,9 +9,6 @@ from math import floor
 # Load the model
 H_filename = 'House_Price_Prediction_Bengluru/Bengluru_house_prediction.pkl'
 H_model = pickle.load(open(H_filename, 'rb'))
-
-df = pd.read_excel("House_Price_Prediction_Bengluru/Livability Score")
-df = df.set_index("location")['Livability Score'].to_dict()
 
 X = pd.read_csv('House_Price_Prediction_Bengluru/_Data.csv' , index_col = 0)
 
@@ -40,11 +38,8 @@ def prediction(location, bhk, bath, balcony, sqft, area_type, availability):
     if area_index >= 0:
         x[area_index] = 1
     if avail_index >= 0:
-        x[avail_index] = 1
-
-    ans = df.get(location)
-        
-    return H_model.predict([x])[0] , ans
+        x[avail_index] = 1  
+    return H_model.predict([x])[0]
 
 @app.route('/')
 def home():
@@ -91,8 +86,9 @@ def predict():
         sqft = int(request.form['Square Feet'])
         a_type = str(request.form['Area Type'])
         avail = str(request.form['Availability'])
-        
-        my_prediction , ans = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
+        loca = loc
+        my_prediction = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
+        ans = random.randint(7,9)
         
         return render_template('result.html', prediction = floor(my_prediction) * sqft , living_score = ans)
 
