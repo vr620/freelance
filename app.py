@@ -13,6 +13,7 @@ X = pd.read_csv('House_Price_Prediction_Bengluru/_Data.csv' , index_col = 0)
 
 df = pd.read_excel("House_Price_Prediction_Bengluru/Livability Score.xlsx")
 df = df.set_index('location')['Livability Score'].to_dict()
+
 app = Flask(__name__)
 
 def prediction(location, bhk, bath, balcony, sqft, area_type, availability):
@@ -40,8 +41,10 @@ def prediction(location, bhk, bath, balcony, sqft, area_type, availability):
         x[area_index] = 1
     if avail_index >= 0:
         x[avail_index] = 1
+
+    ans = df.get(Location)
         
-    return H_model.predict([x])[0]
+    return H_model.predict([x])[0] , ans
 
 @app.route('/')
 def home():
@@ -88,9 +91,8 @@ def predict():
         sqft = int(request.form['Square Fit'])
         a_type = str(request.form['Area Type'])
         avail = str(request.form['Availability'])
-        my_prediction = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
-        ans = df.get(loc)
-        return render_template('result.html', prediction = round(my_prediction , 2)  , Livability = ans)
+        my_prediction , living_score = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
+        return render_template('result.html', prediction = round(my_prediction , 2) , Living_score = living_score)
 
 if __name__ == '__main__':
 	app.run(debug=True)
