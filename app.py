@@ -90,7 +90,7 @@ def predict():
         my_prediction = prediction(loc, bhk, bath, balc, sqft, a_type, avail)
         ans = random.randint(7,9)
         
-        return render_template('result.html', prediction = floor(my_prediction) * sqft , living_score = ans)
+        return render_template('result.html', prediction = round(my_prediction,2) , living_score = ans)
 
 if __name__ == '__main__':
 	app.run(debug=True)
