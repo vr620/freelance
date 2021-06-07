@@ -77,7 +77,7 @@ def home():
 
 
 @app.route('/House_predict', methods=['POST'])
-#def predict():
+def predict():
     if request.method == 'POST':
         loc = str(request.form['Location'])
         bhk = int(request.form['BHK'])
